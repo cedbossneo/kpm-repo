@@ -23,9 +23,9 @@ else
 fi
 
 echo "----- Upgrading wescale Cluster"
-#yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --master
-#yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --image-type=CONTAINER_VM --node-pool=pool-high-mem
-#yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --image-type=CONTAINER_VM --node-pool=pool-default
+yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --master
+yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --image-type=CONTAINER_VM --node-pool=pool-high-mem
+yes | gcloud container clusters upgrade wescale-cluster --zone=europe-west1-c --cluster-version=1.5.2 --image-type=CONTAINER_VM --node-pool=pool-default
 
 gcloud container clusters get-credentials wescale-cluster --zone europe-west1-c
 
