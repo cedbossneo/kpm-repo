@@ -1,6 +1,5 @@
-{% macro make() -%}
 [global]
-fsid = 15D20924-9D97-4CA6-AF22-740C8AF42C2F
+fsid = {{ fsid }}
 cephx = true
 cephx_require_signatures = false
 cephx_cluster_require_signatures = true
@@ -70,4 +69,3 @@ rbd_default_features = 1
 
 [mds]
 mds_cache_size = 100000
-{%- endmacro %}

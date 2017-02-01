@@ -1,7 +1,6 @@
-{% import '../keys/ceph.rgw.keyring.j2' as rgw_keyring %}
 apiVersion: v1
 data:
-  ceph.keyring: {{ rgw_keyring.make(keyring.rgw)|b64encode }}
+  ceph.keyring: {{ rendered.keyring.rgw|b64encode }}
 kind: Secret
 metadata:
   name: ceph-bootstrap-rgw-keyring

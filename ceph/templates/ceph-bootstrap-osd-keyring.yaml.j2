@@ -1,7 +1,6 @@
-{% import '../keys/ceph.osd.keyring.j2' as osd_keyring %}
 apiVersion: v1
 data:
-  ceph.keyring: {{ osd_keyring.make(keyring.osd)|b64encode }}
+  ceph.keyring: {{ rendered.keyring.osd|b64encode }}
 kind: Secret
 metadata:
   name: ceph-bootstrap-osd-keyring

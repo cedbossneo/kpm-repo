@@ -1,5 +1,3 @@
-{% macro make(key) -%}
 [client.bootstrap-osd]
-  key = {{ key }}
+  key = {{ osd }}
   caps mon = "allow profile bootstrap-osd"
-{%- endmacro %}

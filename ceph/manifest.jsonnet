@@ -19,11 +19,22 @@ function(
         mds: "AQAPxSpYAAAAABAASncm+os/+m2c45fp29MUNw==",
         osd: "AQAPxSpYAAAAABAA/QVfOwJ5AwY/k0mTLsFB+g==",
         rgw: "AQAPxSpYAAAAABAAdKXFW6cwGA71BQKQTmgPtA==",
-        client: "",
         mon: "AQAPxSpYAAAAABAApgvLdfGtVJYS7S+SkbfcbA==",
         admin: "AQAPxSpYAAAAABAA5Wb8gTsPqyg9STU7uE6Diw==",
       },
-      conf: ""
+      conf: {
+          fsid: "15D20924-9D97-4CA6-AF22-740C8AF42C2F"
+      },
+      rendered: {
+        keyring: {
+          osd: kpm.jinja2(kpm.readfile("keys/ceph.osd.keyring.j2"), $.variables.keyring),
+          mds: kpm.jinja2(kpm.readfile("keys/ceph.mds.keyring.j2"), $.variables.keyring),
+          mon: kpm.jinja2(kpm.readfile("keys/ceph.mon.keyring.j2"), $.variables.keyring),
+          rgw: kpm.jinja2(kpm.readfile("keys/ceph.rgw.keyring.j2"), $.variables.keyring),
+          admin: kpm.jinja2(kpm.readfile("keys/ceph.client.admin.keyring.j2"), $.variables.keyring)
+        },
+        conf: kpm.jinja2(kpm.readfile("keys/ceph.conf.j2"), $.variables.conf)
+      }
     },
 
     resources: [
@@ -70,24 +81,24 @@ function(
         type: "storageclass"
       },
       {
-        file: "ceph-conf-combined.yaml",
-        template: (importstr "templates/ceph-conf-combined.yaml.j2"),
-        name: "ceph-conf-combined",
-        type: "secret"
-      },
-      {
-        file: "ceph-bootstrap-rgw-keyring.yaml",
-        template: (importstr "templates/ceph-bootstrap-rgw-keyring.yaml.j2"),
-        name: "ceph-bootstrap-rgw-keyring",
-        type: "secret"
-      },
-      {
-        file: "ceph-bootstrap-mds-keyring.yaml",
-        template: (importstr "templates/ceph-bootstrap-mds-keyring.yaml.j2"),
-        name: "ceph-bootstrap-mds-keyring",
-        type: "secret"
-      },
-      {
+         file: "ceph-conf-combined.yaml",
+         template: (importstr "templates/ceph-conf-combined.yaml.j2"),
+         name: "ceph-conf-combined",
+         type: "secret"
+       },
+       {
+         file: "ceph-bootstrap-rgw-keyring.yaml",
+         template: (importstr "templates/ceph-bootstrap-rgw-keyring.yaml.j2"),
+         name: "ceph-bootstrap-rgw-keyring",
+         type: "secret"
+       },
+       {
+         file: "ceph-bootstrap-mds-keyring.yaml",
+         template: (importstr "templates/ceph-bootstrap-mds-keyring.yaml.j2"),
+         name: "ceph-bootstrap-mds-keyring",
+         type: "secret"
+       },
+       {
         file: "ceph-bootstrap-osd-keyring.yaml",
         template: (importstr "templates/ceph-bootstrap-osd-keyring.yaml.j2"),
         name: "ceph-bootstrap-osd-keyring",

@@ -1,5 +1,3 @@
-{% macro make(key) -%}
 [client.bootstrap-rgw]
-  key = {{ key }}
+  key = {{ rgw }}
   caps mon = "allow profile bootstrap-rgw"
-{%- endmacro %}
