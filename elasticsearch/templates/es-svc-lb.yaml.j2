@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-internal
+  labels:
+    component: elasticsearch
+    role: client
+    cluster: {{ es.cluster_name }}
+spec:
+  type: LoadBalancer
+  selector:
+    component: elasticsearch
+    role: client
+    cluster: {{ es.cluster_name }}
+  ports:
+  - name: es-http
+    targetPort: 9200
+    port: 80
+    protocol: TCP

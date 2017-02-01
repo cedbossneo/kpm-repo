@@ -1,0 +1,34 @@
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: ceph
+    daemon: install-tools
+  name: ceph-tools
+  namespace: ceph
+spec:
+  template:
+    metadata:
+      name: ceph-tools
+      namespace: ceph
+      labels:
+        app: ceph-tools
+        daemon: install-tools
+    spec:
+      serviceAccount: default
+      volumes:
+      - name: ceph-conf
+        secret:
+          secretName: ceph-conf-combined
+      - name: rootfs
+        hostPath:
+          path: /
+      containers:
+      - name: install-ceph
+        image: cedbossneo/ceph-tools:gce
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /rootfs
+          name: rootfs
+        - mountPath: /conf
+          name: ceph-conf

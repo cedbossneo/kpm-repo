@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: concourse-web
+  labels:
+    name: concourse-web
+    version: {{ concourse_version }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: concourse-web
+    spec:
+      volumes:
+        - name: keys
+          secret:
+            secretName: concourse-keys
+      containers:
+        - name: concourse-web
+          image: concourse/concourse:{{ concourse_version }}
+          args: ['web']
+          env:
+            - name: CONCOURSE_BASIC_AUTH_USERNAME
+              value: "concourse"
+            - name: CONCOURSE_BASIC_AUTH_PASSWORD
+              value: "wescale"
+            - name: CONCOURSE_POSTGRES_DATA_SOURCE
+              value: "postgres://{{ db_user }}:{{ db_password }}@postgres:5432/{{ db_name }}?sslmode=disable"
+            - name: MY_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: CONCOURSE_PEER_URL
+              value: http://$(MY_IP):$(CONCOURSE_SERVICE_PORT)
+          ports:
+            - name: concourse-http
+              containerPort: 8080
+            - name: concourse-tsa
+              containerPort: 2222
+          volumeMounts:
+            - name: keys
+              mountPath: /concourse-keys
+              readOnly: true

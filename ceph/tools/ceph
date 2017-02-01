@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/docker run --net=host --rm -v /etc/ceph/resolv.conf:/etc/resolv.conf -v /etc/ceph:/etc/ceph ceph/base ceph "$@"

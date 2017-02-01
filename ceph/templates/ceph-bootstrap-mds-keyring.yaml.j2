@@ -1,0 +1,9 @@
+{% import '../keys/ceph.mds.keyring.j2' as mds_keyring %}
+apiVersion: v1
+data:
+  ceph.keyring: {{ mds_keyring.make(keyring.mds)|b64encode }}
+kind: Secret
+metadata:
+  name: ceph-bootstrap-mds-keyring
+  namespace: ceph
+type: Opaque

@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/docker run --privileged=true -v /lib/modules:/lib/modules -v /sys:/sys --net=host --rm -v /etc/ceph/resolv.conf:/etc/resolv.conf -v /etc/ceph:/etc/ceph ceph/base rbd "$@"

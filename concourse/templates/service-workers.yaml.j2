@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: concourse-worker
+  labels:
+    name: concourse-worker
+spec:
+  type: LoadBalancer
+  ports:
+  - name: concourse-tsa
+    port: 2222
+    targetPort: concourse-tsa
+  selector:
+    name: concourse-web

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: es-{{es.cluster_name}}-master-{{shard}}
+  labels:
+    type: es-master
+    cluster: {{ es.cluster_name }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  persistentVolumeReclaimPolicy: Retain
+  rbd:
+    monitors:
+      - ceph-mon.ceph
+    image: es-{{es.cluster_name}}-master-{{shard}}
+    secretRef:
+      name: ceph-client-key

@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/docker run --net=host --rm -v /etc/ceph/resolv.conf:/etc/resolv.conf --privileged=true -v /etc/ceph:/etc/ceph -v /dev:/dev ceph/base ceph-disk "$@"

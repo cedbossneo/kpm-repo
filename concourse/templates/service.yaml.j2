@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: concourse-web
+  labels:
+    name: concourse-web
+spec:
+  type: NodePort
+  ports:
+  - name: concourse-web
+    nodePort: 32000
+    port: 8080
+    targetPort: concourse-http
+  selector:
+    name: concourse-web

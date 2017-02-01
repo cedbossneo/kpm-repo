@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  ceph-client-key: {{ keyring.client|b64encode }}
+kind: Secret
+metadata:
+  name: ceph-client-key
+type: Opaque

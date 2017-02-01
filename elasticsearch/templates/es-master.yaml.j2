@@ -1,0 +1,86 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: es-master
+  labels:
+    component: elasticsearch
+    role: master
+    cluster: {{ es.cluster_name }}
+spec:
+  serviceName: "elasticsearch-discovery"
+  replicas: {{ es.master_size }}
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: master
+        cluster: {{ es.cluster_name }}
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+          "name": "sysctl",
+            "image": "busybox",
+            "imagePullPolicy": "Always",
+            "command": ["sysctl", "-w", "vm.max_map_count=262144"],
+            "securityContext": {
+              "privileged": true
+            }
+          }
+        ]'
+    spec:
+      containers:
+      - name: es-master
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - IPC_LOCK
+        image: {{ es.image }}
+        imagePullPolicy: Always
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: "CLUSTER_NAME"
+          value: "{{ es.cluster_name }}"
+        - name: NODE_MASTER
+          value: "true"
+        - name: NODE_DATA
+          value: "false"
+        - name: HTTP_ENABLE
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: "-Xms2g -Xmx2g"
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        resources:
+          requests:
+            memory: 4Gi
+          limits:
+            memory: 4Gi
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+        livenessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 60
+        readinessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 5
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: "2Gi"
+      selector:
+        matchLabels:
+          type: es-master
+          cluster: {{ es.cluster_name }}

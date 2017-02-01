@@ -1,0 +1,46 @@
+resources:
+  - name: wescale-cluster
+    type: container.v1.cluster
+    properties:
+      zone: europe-west1-c
+      cluster:
+        name: wescale-cluster
+        description: Kubernetes Cluster
+        masterAuth:
+          username: admin
+          password: wescalesecretpassword
+        nodePools:
+          - name: pool-default
+            initialNodeCount: 3
+            autoscaling:
+              enabled: true
+              minNodeCount: 1
+              maxNodeCount: 10
+            config:
+              machineType: n1-standard-2
+              imageType: CONTAINER_VM
+              oauthScopes:
+              - https://www.googleapis.com/auth/compute
+              - https://www.googleapis.com/auth/devstorage.read_write
+              - https://www.googleapis.com/auth/logging.write
+              - https://www.googleapis.com/auth/monitoring
+              - https://www.googleapis.com/auth/pubsub
+              - https://www.googleapis.com/auth/bigquery
+              - https://www.googleapis.com/auth/datastore
+          - name: pool-high-mem
+            initialNodeCount: 3
+            autoscaling:
+              enabled: true
+              minNodeCount: 1
+              maxNodeCount: 10
+            config:
+              machineType: n1-standard-4
+              imageType: CONTAINER_VM
+              oauthScopes:
+              - https://www.googleapis.com/auth/compute
+              - https://www.googleapis.com/auth/devstorage.read_write
+              - https://www.googleapis.com/auth/logging.write
+              - https://www.googleapis.com/auth/monitoring
+              - https://www.googleapis.com/auth/pubsub
+              - https://www.googleapis.com/auth/bigquery
+              - https://www.googleapis.com/auth/datastore

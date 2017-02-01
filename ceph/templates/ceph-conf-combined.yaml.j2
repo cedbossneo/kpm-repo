@@ -1,0 +1,13 @@
+{% import '../keys/ceph.client.admin.keyring.j2' as admin_keyring %}
+{% import '../keys/ceph.mon.keyring.j2' as mon_keyring %}
+{% import '../keys/ceph.conf.j2' as ceph_conf %}
+apiVersion: v1
+data:
+  ceph.client.admin.keyring: {{ admin_keyring.make(keyring.admin)|b64encode }}
+  ceph.conf: {{ ceph_conf.make(conf)|b64encode }}
+  ceph.mon.keyring: {{ mon_keyring.make(keyring.mon)|b64encode }}
+kind: Secret
+metadata:
+  name: ceph-conf-combined
+  namespace: ceph
+type: Opaque

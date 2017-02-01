@@ -1,0 +1,84 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: es-client
+  labels:
+    component: elasticsearch
+    role: client
+    cluster: {{ es.cluster_name }}
+spec:
+  replicas: {{ es.client_size }}
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: client
+        cluster: {{ es.cluster_name }}
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+            "name": "sysctl",
+            "image": "busybox",
+            "imagePullPolicy": "Always",
+            "command": ["sysctl", "-w", "vm.max_map_count=262144"],
+            "securityContext": {
+              "privileged": true
+            }
+          }
+        ]'
+    spec:
+      containers:
+      - name: es-client
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - IPC_LOCK
+        image: {{ es.image }}
+        imagePullPolicy: Always
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: "CLUSTER_NAME"
+          value: "{{ es.cluster_name }}"
+        - name: NODE_MASTER
+          value: "false"
+        - name: NODE_DATA
+          value: "false"
+        - name: HTTP_ENABLE
+          value: "true"
+        - name: ES_JAVA_OPTS
+          value: "-Xms1g -Xmx1g"
+        ports:
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 100m
+          limits:
+            memory: 4Gi
+            cpu: 1000m
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+        livenessProbe:
+          httpGet:
+            port: 9200
+            path: /
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            port: 9200
+            path: /
+          initialDelaySeconds: 5
+      volumes:
+          - emptyDir:
+              medium: ""
+            name: "storage"
